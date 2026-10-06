@@ -6,4 +6,4 @@ build
 .env
 .env.local
 .DS_Store
-dev_server.log
+*.log

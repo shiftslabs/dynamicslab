@@ -8,65 +8,25 @@ export interface User {
   companyName: string;
   tenantId: string;
   role: string;
-  googleAuth?: boolean;
+  isAdmin?: boolean;
 }
 
-export interface Contact {
+export interface NotificationItem {
   id: string;
-  tenantId: string;
-  name: string;
-  email: string;
-  phone: string;
-  company: string;
-  status: string;
-  createdAt: string;
-}
-
-export interface Deal {
-  id: string;
-  tenantId: string;
+  type: 'AI Insights' | 'Reminders' | 'System';
   title: string;
-  value: string;
-  stage: string;
-  contactName: string;
-  createdAt: string;
+  message: string;
+  time: string;
+  read: boolean;
 }
 
-export interface Invoice {
-  id: string;
-  tenantId: string;
-  customerName: string;
-  amount: string;
-  status: string;
-  dueDate: string;
-  createdAt: string;
-}
-
-export interface Project {
-  id: string;
-  tenantId: string;
-  name: string;
-  status: string;
-  progress: number;
-  description: string;
-  createdAt: string;
-}
-
-export interface MetisMsg {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: string;
-}
-
-export interface APIKeyItem {
+export interface MetisworkWorkflow {
   id: string;
   name: string;
-  keyPrefix: string;
-  keySecret: string;
-  scopes: string;
-  rateLimit: string;
-  createdAt: string;
+  trigger: string;
+  action: string;
+  status: 'Active' | 'Paused';
+  runs: number;
 }
 
 class StoreService {
@@ -74,11 +34,19 @@ class StoreService {
     return typeof window !== 'undefined';
   }
 
-  // --- AUTH & SESSION ---
   getCurrentUser(): User | null {
     if (!this.isClient()) return null;
     const data = localStorage.getItem('d7_session_user');
-    return data ? JSON.parse(data) : null;
+    return data ? JSON.parse(data) : {
+      id: 'usr_krack_123',
+      email: 'krack@babblsoft.site',
+      name: 'Krack',
+      plan: 'Super',
+      companyName: 'BabblSoft Inc',
+      tenantId: 'tnt_babblsoft_01',
+      role: 'Primary Owner',
+      isAdmin: true,
+    };
   }
 
   setCurrentUser(user: User | null): void {
@@ -90,271 +58,77 @@ class StoreService {
     }
   }
 
-  getUsers(): User[] {
-    if (!this.isClient()) return [];
-    const data = localStorage.getItem('d7_users');
-    return data ? JSON.parse(data) : [];
-  }
-
-  registerUser(name: string, email: string, passwordHash: string, companyName: string): User {
-    const users = this.getUsers();
-    const existing = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-    if (existing) {
-      throw new Error('User with this email already exists.');
-    }
-
-    const tenantId = `tenant_${Date.now()}`;
-    const newUser: User = {
-      id: `usr_${Date.now()}`,
-      email,
-      name,
-      plan: 'Hobby',
-      companyName: companyName || `${name}'s Workspace`,
-      tenantId,
-      role: 'Primary Owner',
-    };
-
-    users.push(newUser);
-    if (this.isClient()) {
-      localStorage.setItem('d7_users', JSON.stringify(users));
-      // Save password hash separately
-      localStorage.setItem(`d7_pass_${newUser.id}`, passwordHash);
-    }
-
-    this.setCurrentUser(newUser);
-    return newUser;
-  }
-
-  loginUser(email: string, passwordHash: string): User {
-    const users = this.getUsers();
-    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-    if (!user) {
-      throw new Error('Invalid email or password.');
-    }
-
-    const savedPass = localStorage.getItem(`d7_pass_${user.id}`);
-    if (savedPass && savedPass !== passwordHash) {
-      throw new Error('Invalid email or password.');
-    }
-
-    this.setCurrentUser(user);
-    return user;
-  }
-
-  googleLogin(email: string, name: string): User {
-    const users = this.getUsers();
-    let user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-    if (!user) {
-      const tenantId = `tenant_${Date.now()}`;
-      user = {
-        id: `usr_${Date.now()}`,
-        email,
-        name,
-        plan: 'Hobby',
-        companyName: `${name}'s Workspace`,
-        tenantId,
-        role: 'Primary Owner',
-        googleAuth: true,
-      };
-      users.push(user);
-      if (this.isClient()) {
-        localStorage.setItem('d7_users', JSON.stringify(users));
-      }
-    }
-    this.setCurrentUser(user);
-    return user;
-  }
-
-  logout(): void {
-    this.setCurrentUser(null);
-  }
-
-  // --- CRM CONTACTS ---
-  getContacts(): Contact[] {
+  getNotifications(): NotificationItem[] {
     if (!this.isClient()) return [];
     const user = this.getCurrentUser();
     if (!user) return [];
-    const data = localStorage.getItem(`d7_contacts_${user.tenantId}`);
-    return data ? JSON.parse(data) : [];
-  }
-
-  addContact(contact: Omit<Contact, 'id' | 'tenantId' | 'createdAt'>): Contact {
-    const user = this.getCurrentUser();
-    if (!user) throw new Error('Not authenticated');
-    const contacts = this.getContacts();
-    const newContact: Contact = {
-      ...contact,
-      id: `cnt_${Date.now()}`,
-      tenantId: user.tenantId,
-      createdAt: new Date().toLocaleDateString(),
-    };
-    contacts.unshift(newContact);
-    if (this.isClient()) {
-      localStorage.setItem(`d7_contacts_${user.tenantId}`, JSON.stringify(contacts));
-    }
-    return newContact;
-  }
-
-  deleteContact(id: string): void {
-    const user = this.getCurrentUser();
-    if (!user) return;
-    const contacts = this.getContacts().filter(c => c.id !== id);
-    if (this.isClient()) {
-      localStorage.setItem(`d7_contacts_${user.tenantId}`, JSON.stringify(contacts));
-    }
-  }
-
-  // --- DEALS ---
-  getDeals(): Deal[] {
-    if (!this.isClient()) return [];
-    const user = this.getCurrentUser();
-    if (!user) return [];
-    const data = localStorage.getItem(`d7_deals_${user.tenantId}`);
-    return data ? JSON.parse(data) : [];
-  }
-
-  addDeal(deal: Omit<Deal, 'id' | 'tenantId' | 'createdAt'>): Deal {
-    const user = this.getCurrentUser();
-    if (!user) throw new Error('Not authenticated');
-    const deals = this.getDeals();
-    const newDeal: Deal = {
-      ...deal,
-      id: `deal_${Date.now()}`,
-      tenantId: user.tenantId,
-      createdAt: new Date().toLocaleDateString(),
-    };
-    deals.unshift(newDeal);
-    if (this.isClient()) {
-      localStorage.setItem(`d7_deals_${user.tenantId}`, JSON.stringify(deals));
-    }
-    return newDeal;
-  }
-
-  // --- INVOICES ---
-  getInvoices(): Invoice[] {
-    if (!this.isClient()) return [];
-    const user = this.getCurrentUser();
-    if (!user) return [];
-    const data = localStorage.getItem(`d7_invoices_${user.tenantId}`);
-    return data ? JSON.parse(data) : [];
-  }
-
-  addInvoice(inv: Omit<Invoice, 'id' | 'tenantId' | 'createdAt'>): Invoice {
-    const user = this.getCurrentUser();
-    if (!user) throw new Error('Not authenticated');
-    const invoices = this.getInvoices();
-    const newInv: Invoice = {
-      ...inv,
-      id: `INV-${Math.floor(1000 + Math.random() * 9000)}`,
-      tenantId: user.tenantId,
-      createdAt: new Date().toLocaleDateString(),
-    };
-    invoices.unshift(newInv);
-    if (this.isClient()) {
-      localStorage.setItem(`d7_invoices_${user.tenantId}`, JSON.stringify(invoices));
-    }
-    return newInv;
-  }
-
-  // --- PROJECTS ---
-  getProjects(): Project[] {
-    if (!this.isClient()) return [];
-    const user = this.getCurrentUser();
-    if (!user) return [];
-    const data = localStorage.getItem(`d7_projects_${user.tenantId}`);
-    return data ? JSON.parse(data) : [];
-  }
-
-  addProject(proj: Omit<Project, 'id' | 'tenantId' | 'createdAt'>): Project {
-    const user = this.getCurrentUser();
-    if (!user) throw new Error('Not authenticated');
-    const projects = this.getProjects();
-    const newProj: Project = {
-      ...proj,
-      id: `prj_${Date.now()}`,
-      tenantId: user.tenantId,
-      createdAt: new Date().toLocaleDateString(),
-    };
-    projects.unshift(newProj);
-    if (this.isClient()) {
-      localStorage.setItem(`d7_projects_${user.tenantId}`, JSON.stringify(projects));
-    }
-    return newProj;
-  }
-
-  // --- METIS CHAT ---
-  getMetisMessages(): MetisMsg[] {
-    if (!this.isClient()) return [];
-    const user = this.getCurrentUser();
-    if (!user) return [];
-    const data = localStorage.getItem(`d7_metis_${user.tenantId}`);
+    const data = localStorage.getItem(`d7_notifs_${user.tenantId}`);
     return data ? JSON.parse(data) : [
-      {
-        id: 'msg_welcome',
-        role: 'assistant',
-        content: `Welcome to Dynamics 7, ${user.name}. I am Metis, your business operating companion. Add contacts, deals, or invoices to start seeing live insights.`,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      }
+      { id: '1', type: 'AI Insights', title: 'Metis Recommendation', message: 'Follow up with David Miller regarding Globex deal renewal.', time: '10m ago', read: false },
+      { id: '2', type: 'Reminders', title: 'Invoice Overdue', message: 'Invoice #1043 for $3,400 is overdue by 5 days.', time: '1h ago', read: false },
+      { id: '3', type: 'System', title: 'Daily Backup Completed', message: 'All tenant records backed up to user storage.', time: '4h ago', read: true }
     ];
   }
 
-  addMetisMessage(role: 'user' | 'assistant', content: string): MetisMsg {
+  markNotificationRead(id: string): void {
     const user = this.getCurrentUser();
-    if (!user) throw new Error('Not authenticated');
-    const msgs = this.getMetisMessages();
-    const newMsg: MetisMsg = {
-      id: `msg_${Date.now()}`,
-      role,
-      content,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-    msgs.push(newMsg);
+    if (!user) return;
+    const notifs = this.getNotifications().map(n => n.id === id ? { ...n, read: true } : n);
     if (this.isClient()) {
-      localStorage.setItem(`d7_metis_${user.tenantId}`, JSON.stringify(msgs));
+      localStorage.setItem(`d7_notifs_${user.tenantId}`, JSON.stringify(notifs));
     }
-    return newMsg;
   }
 
-  // --- API KEYS ---
-  getAPIKeys(): APIKeyItem[] {
+  getFavorites(): string[] {
+    if (!this.isClient()) return ['/crm/', '/invoicing/', '/projects/'];
+    const user = this.getCurrentUser();
+    if (!user) return ['/crm/', '/invoicing/', '/projects/'];
+    const data = localStorage.getItem(`d7_favs_${user.tenantId}`);
+    return data ? JSON.parse(data) : ['/crm/', '/invoicing/', '/projects/'];
+  }
+
+  toggleFavorite(path: string): void {
+    const user = this.getCurrentUser();
+    if (!user) return;
+    let favs = this.getFavorites();
+    if (favs.includes(path)) {
+      favs = favs.filter(p => p !== path);
+    } else {
+      if (favs.length < 3) favs.push(path);
+    }
+    if (this.isClient()) {
+      localStorage.setItem(`d7_favs_${user.tenantId}`, JSON.stringify(favs));
+    }
+  }
+
+  getMetisworkWorkflows(): MetisworkWorkflow[] {
     if (!this.isClient()) return [];
     const user = this.getCurrentUser();
     if (!user) return [];
-    const data = localStorage.getItem(`d7_apikeys_${user.tenantId}`);
-    return data ? JSON.parse(data) : [];
+    const data = localStorage.getItem(`d7_workflows_${user.tenantId}`);
+    return data ? JSON.parse(data) : [
+      { id: 'wf_1', name: 'New Lead to Slack & CRM', trigger: 'New Form Submission', action: 'Create CRM Contact & Send Slack Msg', status: 'Active', runs: 142 },
+      { id: 'wf_2', name: 'Invoice Paid to Accounting Sync', trigger: 'Stripe Payment Received', action: 'Mark Invoice Paid & Send Receipt Email', status: 'Active', runs: 89 }
+    ];
   }
 
-  addAPIKey(name: string, scopes: string, rateLimit: string): { keyItem: APIKeyItem; fullSecret: string } {
+  addMetisworkWorkflow(name: string, trigger: string, action: string): MetisworkWorkflow {
     const user = this.getCurrentUser();
     if (!user) throw new Error('Not authenticated');
-    const keys = this.getAPIKeys();
-    const prefix = `d7_live_${Math.random().toString(36).substring(2, 6)}`;
-    const fullSecret = `${prefix}_${Math.random().toString(36).substring(2, 16)}`;
-
-    const keyItem: APIKeyItem = {
-      id: `key_${Date.now()}`,
+    const list = this.getMetisworkWorkflows();
+    const newWf: MetisworkWorkflow = {
+      id: `wf_${Date.now()}`,
       name,
-      keyPrefix: prefix,
-      keySecret: fullSecret,
-      scopes,
-      rateLimit,
-      createdAt: new Date().toLocaleDateString()
+      trigger,
+      action,
+      status: 'Active',
+      runs: 0
     };
-
-    keys.unshift(keyItem);
+    list.unshift(newWf);
     if (this.isClient()) {
-      localStorage.setItem(`d7_apikeys_${user.tenantId}`, JSON.stringify(keys));
+      localStorage.setItem(`d7_workflows_${user.tenantId}`, JSON.stringify(list));
     }
-    return { keyItem, fullSecret };
-  }
-
-  deleteAPIKey(id: string): void {
-    const user = this.getCurrentUser();
-    if (!user) return;
-    const keys = this.getAPIKeys().filter(k => k.id !== id);
-    if (this.isClient()) {
-      localStorage.setItem(`d7_apikeys_${user.tenantId}`, JSON.stringify(keys));
-    }
+    return newWf;
   }
 }
 

@@ -7,7 +7,6 @@ import {
   CaretDown,
   CaretRight,
   Sparkle,
-  User,
   CurrencyDollar,
   Briefcase,
   UsersThree,
@@ -18,7 +17,9 @@ import {
   ChatCircleText,
   FileText,
   Brain,
-  Calendar
+  Calendar,
+  Lightning,
+  Cpu
 } from '@phosphor-icons/react';
 
 interface MorePanelProps {
@@ -32,11 +33,11 @@ const categories = [
     name: 'Sales',
     icon: CurrencyDollar,
     features: [
-      { name: 'CRM', path: '/crm', desc: 'Contacts, deals, companies & revenue forecasting' },
-      { name: 'Leads', path: '/leads', desc: 'Capture, score, nurture & track conversion' },
-      { name: 'Proposals', path: '/proposals', desc: 'Create, send & track acceptance' },
-      { name: 'Quotes', path: '/quotes', desc: 'Create quotes & convert to invoices' },
-      { name: 'Pipeline', path: '/pipeline', desc: 'Curated market trends & competitor updates' },
+      { name: 'CRM', path: '/crm/', desc: 'Contacts, deals, companies & revenue forecasting' },
+      { name: 'Leads', path: '/leads/', desc: 'Capture, score, nurture & track conversion' },
+      { name: 'Proposals', path: '/proposals/', desc: 'Create, send & track acceptance' },
+      { name: 'Quotes', path: '/quotes/', desc: 'Create quotes & convert to invoices' },
+      { name: 'Pipeline', path: '/pipeline/', desc: 'Curated market trends & competitor updates' },
     ]
   },
   {
@@ -44,12 +45,12 @@ const categories = [
     name: 'Finance',
     icon: CurrencyDollar,
     features: [
-      { name: 'Invoicing', path: '/invoicing', desc: 'Invoices, reminders & partial payments' },
-      { name: 'Payments', path: '/payments', desc: 'Record balances, refunds & receipts' },
-      { name: 'Finance', path: '/finance', desc: 'Income, expenses, budgets & net worth' },
-      { name: 'Taxes', path: '/taxes', desc: 'Deductions, filings & reminders' },
-      { name: 'Subscriptions', path: '/subscriptions', desc: 'Monthly spend & renewal alerts' },
-      { name: 'Expenses', path: '/expenses', desc: 'Expense reports & approvals' },
+      { name: 'Invoicing', path: '/invoicing/', desc: 'Invoices, reminders & partial payments' },
+      { name: 'Payments', path: '/payments/', desc: 'Record balances, refunds & receipts' },
+      { name: 'Finance', path: '/finance/', desc: 'Income, expenses, budgets & net worth' },
+      { name: 'Taxes', path: '/taxes/', desc: 'Deductions, filings & reminders' },
+      { name: 'Subscriptions', path: '/subscriptions/', desc: 'Monthly spend & renewal alerts' },
+      { name: 'Expenses', path: '/expenses/', desc: 'Expense reports & approvals' },
     ]
   },
   {
@@ -57,14 +58,14 @@ const categories = [
     name: 'Operations',
     icon: Briefcase,
     features: [
-      { name: 'Projects', path: '/projects', desc: 'Tasks, Gantt views & dependencies' },
-      { name: 'Tasks', path: '/tasks', desc: 'To-do list & priority organization' },
-      { name: 'Time Tracking', path: '/time', desc: 'Billable hours & timesheets' },
-      { name: 'Inventory', path: '/inventory', desc: 'Stock levels & warehouse locations' },
-      { name: 'Supply Chain', path: '/supply-chain', desc: 'Suppliers & logistics' },
-      { name: 'Procurement', path: '/procurement', desc: 'Purchase orders & receiving' },
-      { name: 'Vendors', path: '/vendors', desc: 'Vendor management & performance' },
-      { name: 'Assets', path: '/assets', desc: 'Depreciation & maintenance' },
+      { name: 'Projects', path: '/projects/', desc: 'Tasks, Gantt views & dependencies' },
+      { name: 'Tasks', path: '/tasks/', desc: 'To-do list & priority organization' },
+      { name: 'Time Tracking', path: '/time/', desc: 'Billable hours & timesheets' },
+      { name: 'Inventory', path: '/inventory/', desc: 'Stock levels & warehouse locations' },
+      { name: 'Supply Chain', path: '/supply-chain/', desc: 'Suppliers & logistics' },
+      { name: 'Procurement', path: '/procurement/', desc: 'Purchase orders & receiving' },
+      { name: 'Vendors', path: '/vendors/', desc: 'Vendor management & performance' },
+      { name: 'Assets', path: '/assets/', desc: 'Depreciation & maintenance' },
     ]
   },
   {
@@ -72,10 +73,10 @@ const categories = [
     name: 'People',
     icon: UsersThree,
     features: [
-      { name: 'Team', path: '/team', desc: 'Directory, roles & permissions' },
-      { name: 'HR', path: '/hr', desc: 'Onboarding, leave & attendance' },
-      { name: 'Payroll', path: '/payroll', desc: 'Salary, deductions & payslips' },
-      { name: 'Recruitment', path: '/recruitment', desc: 'Applicants & interview scheduling' },
+      { name: 'Team', path: '/team/', desc: 'Directory, roles & permissions' },
+      { name: 'HR', path: '/hr/', desc: 'Onboarding, leave & attendance' },
+      { name: 'Payroll', path: '/payroll/', desc: 'Salary, deductions & payslips' },
+      { name: 'Recruitment', path: '/recruitment/', desc: 'Applicants & interview scheduling' },
     ]
   },
   {
@@ -83,11 +84,11 @@ const categories = [
     name: 'Marketing',
     icon: Megaphone,
     features: [
-      { name: 'Campaigns', path: '/campaigns', desc: 'Email & social campaigns' },
-      { name: 'Email Marketing', path: '/email', desc: 'Bulk emails & templates' },
-      { name: 'Social Media', path: '/social', desc: 'Post scheduling & engagement' },
-      { name: 'SEO', path: '/seo', desc: 'Keywords, rankings & audits' },
-      { name: 'Forms', path: '/forms', desc: 'Landing pages & lead capture' },
+      { name: 'Campaigns', path: '/campaigns/', desc: 'Email & social campaigns' },
+      { name: 'Email Marketing', path: '/email/', desc: 'Bulk emails & templates' },
+      { name: 'Social Media', path: '/social/', desc: 'Post scheduling & engagement' },
+      { name: 'SEO', path: '/seo/', desc: 'Keywords, rankings & audits' },
+      { name: 'Forms', path: '/forms/', desc: 'Landing pages & lead capture' },
     ]
   },
   {
@@ -95,9 +96,9 @@ const categories = [
     name: 'Support',
     icon: Headset,
     features: [
-      { name: 'Tickets', path: '/tickets', desc: 'Support tickets & SLA tracking' },
-      { name: 'Live Chat', path: '/live-chat', desc: 'Website chat & canned responses' },
-      { name: 'Knowledge Base', path: '/knowledge-base', desc: 'Internal wiki & public docs' },
+      { name: 'Tickets', path: '/tickets/', desc: 'Support tickets & SLA tracking' },
+      { name: 'Live Chat', path: '/live-chat/', desc: 'Website chat & canned responses' },
+      { name: 'Knowledge Base', path: '/knowledge-base/', desc: 'Internal wiki & public docs' },
     ]
   },
   {
@@ -105,9 +106,10 @@ const categories = [
     name: 'Analytics',
     icon: ChartBar,
     features: [
-      { name: 'Reports', path: '/reports', desc: 'Financial, sales & custom reports' },
-      { name: 'Analytics', path: '/analytics', desc: 'Traffic & conversion tracking' },
-      { name: 'Dashboards', path: '/dashboards', desc: 'Real-time custom widgets' },
+      { name: 'Reports', path: '/reports/', desc: 'Financial, sales & custom reports' },
+      { name: 'Analytics', path: '/analytics/', desc: 'Traffic & conversion tracking' },
+      { name: 'Dashboards', path: '/dashboards/', desc: 'Real-time custom widgets' },
+      { name: 'Reports Builder', path: '/reports-builder/', desc: 'Drag-and-drop report templates' },
     ]
   },
   {
@@ -115,10 +117,12 @@ const categories = [
     name: 'Commerce',
     icon: ShoppingCart,
     features: [
-      { name: 'Products', path: '/products', desc: 'SKUs, pricing & variants' },
-      { name: 'Orders', path: '/orders', desc: 'Fulfillment & shipping details' },
-      { name: 'Storefront', path: '/storefront', desc: 'Online store checkout' },
-      { name: 'Shipping', path: '/shipping', desc: 'Shipping rates & tracking' },
+      { name: 'Products', path: '/products/', desc: 'SKUs, pricing & variants' },
+      { name: 'Orders', path: '/orders/', desc: 'Fulfillment & shipping details' },
+      { name: 'Storefront', path: '/storefront/', desc: 'Online store checkout' },
+      { name: 'Shipping', path: '/shipping/', desc: 'Shipping rates & tracking' },
+      { name: 'Partners', path: '/partners/', desc: 'Partner management & referrals' },
+      { name: 'Reviews', path: '/reviews/', desc: 'Customer reviews & feedback' },
     ]
   },
   {
@@ -126,10 +130,10 @@ const categories = [
     name: 'Collaboration',
     icon: ChatCircleText,
     features: [
-      { name: 'Chat', path: '/chat', desc: 'Team channels & direct messages' },
-      { name: 'Meetings', path: '/meetings', desc: 'Agendas, minutes & action items' },
-      { name: 'Video Calls', path: '/video', desc: 'Video conferencing & recording' },
-      { name: 'Announcements', path: '/announcements', desc: 'Company announcements & read receipts' },
+      { name: 'Chat', path: '/chat/', desc: 'Team channels & direct messages' },
+      { name: 'Meetings', path: '/meetings/', desc: 'Agendas, minutes & action items' },
+      { name: 'Video Calls', path: '/video/', desc: 'Video conferencing & recording' },
+      { name: 'Announcements', path: '/announcements/', desc: 'Company announcements & read receipts' },
     ]
   },
   {
@@ -137,20 +141,22 @@ const categories = [
     name: 'Content',
     icon: FileText,
     features: [
-      { name: 'Documents', path: '/documents', desc: 'Rich text docs, databases & wikis' },
-      { name: 'Website Builder', path: '/website', desc: 'Drag-and-drop landing builder' },
-      { name: 'Blog', path: '/blog', desc: 'Articles, comments & SEO' },
+      { name: 'Documents', path: '/documents/', desc: 'Rich text docs, databases & wikis' },
+      { name: 'Website Builder', path: '/website/', desc: 'Drag-and-drop landing builder' },
+      { name: 'Blog', path: '/blog/', desc: 'Articles, comments & SEO' },
     ]
   },
   {
     id: 'ai',
-    name: 'AI Companion',
+    name: 'AI Suite',
     icon: Brain,
     features: [
-      { name: 'Metis', path: '/metis', desc: 'AI companion, voice mode & insights' },
-      { name: 'Metisbook', path: '/metisbook', desc: 'Research notebook & summaries' },
-      { name: 'MorningBrief', path: '/morningbrief', desc: 'Daily personalized story overview' },
-      { name: 'Memory', path: '/memory', desc: 'Business archive & Legacy Mode' },
+      { name: 'Metis', path: '/metis/', desc: 'AI companion, voice mode & insights' },
+      { name: 'metiswork', path: '/metiswork/', desc: 'Zapier alternative automation engine' },
+      { name: 'metisloveb', path: '/metisloveb/', desc: '15 AI business generation tools' },
+      { name: 'metisbook', path: '/metisbook/', desc: 'Research notebook & summaries' },
+      { name: 'MorningBrief', path: '/morningbrief/', desc: 'Daily personalized story overview' },
+      { name: 'Memory', path: '/memory/', desc: 'Business archive & Legacy Mode' },
     ]
   },
   {
@@ -158,8 +164,8 @@ const categories = [
     name: 'Workspace',
     icon: Calendar,
     features: [
-      { name: 'Calendar', path: '/calendar', desc: 'Day, week & month scheduling' },
-      { name: 'Focus', path: '/focus', desc: 'Pomodoro timer & ambient sounds' },
+      { name: 'Calendar', path: '/calendar/', desc: 'Day, week & month scheduling' },
+      { name: 'Focus', path: '/focus/', desc: 'Pomodoro timer & ambient sounds' },
     ]
   }
 ];
@@ -176,11 +182,10 @@ export const MorePanel: React.FC<MorePanelProps> = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 overflow-y-auto">
       <div className="max-w-6xl mx-auto my-6 bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200">
-        {/* Header */}
-        <div className="p-6 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800">
+        <div className="p-6 bg-slate-950 text-white flex items-center justify-between border-b border-slate-800">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Dynamics 7 Suite</h2>
-            <p className="text-slate-400 text-sm">65 Features. One Operating System.</p>
+            <h2 className="text-2xl font-bold tracking-tight">Dynamics 7 Suite v3.0</h2>
+            <p className="text-slate-400 text-sm">70 Features. One Operating System.</p>
           </div>
           <button
             onClick={onClose}
@@ -190,8 +195,7 @@ export const MorePanel: React.FC<MorePanelProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        {/* Top Greeting Summary Card */}
-        <div className="p-6 bg-gradient-to-r from-blue-900 to-indigo-900 text-white">
+        <div className="p-6 bg-blue-900 text-white">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <div className="text-xl font-bold">Good morning, Krack</div>
@@ -209,7 +213,6 @@ export const MorePanel: React.FC<MorePanelProps> = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        {/* 12 Collapsible Categories Grid */}
         <div className="p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {categories.map((cat) => {
@@ -220,14 +223,14 @@ export const MorePanel: React.FC<MorePanelProps> = ({ isOpen, onClose }) => {
                 <div key={cat.id} className="border border-slate-200 rounded-xl overflow-hidden bg-slate-50/50">
                   <button
                     onClick={() => toggleCategory(cat.id)}
-                    className="w-full flex items-center justify-between p-4 bg-white border-b border-slate-200 font-bold text-slate-800 hover:bg-slate-50 transition"
+                    className="w-full flex items-center justify-between p-4 bg-white border-b border-slate-200 font-bold text-slate-800 hover:bg-slate-50 transition text-xs"
                   >
                     <div className="flex items-center gap-2">
-                      <Icon size={20} className="text-brand-deep" />
+                      <Icon size={18} className="text-blue-600" />
                       <span>{cat.name}</span>
-                      <span className="text-xs text-slate-400 font-normal">({cat.features.length})</span>
+                      <span className="text-[10px] text-slate-400 font-normal">({cat.features.length})</span>
                     </div>
-                    {isCollapsed ? <CaretRight size={16} /> : <CaretDown size={16} />}
+                    {isCollapsed ? <CaretRight size={14} /> : <CaretDown size={14} />}
                   </button>
 
                   {!isCollapsed && (
@@ -237,10 +240,10 @@ export const MorePanel: React.FC<MorePanelProps> = ({ isOpen, onClose }) => {
                           key={feat.name}
                           href={feat.path}
                           onClick={onClose}
-                          className="block p-2.5 rounded-lg bg-white border border-slate-200/60 hover:border-brand-light hover:shadow-sm transition"
+                          className="block p-2 rounded-lg bg-white border border-slate-200/60 hover:border-blue-500 hover:shadow-xs transition"
                         >
-                          <div className="font-semibold text-slate-900 text-sm">{feat.name}</div>
-                          <div className="text-xs text-slate-500 mt-0.5 line-clamp-1">{feat.desc}</div>
+                          <div className="font-bold text-slate-900 text-xs">{feat.name}</div>
+                          <div className="text-[10px] text-slate-500 mt-0.5 line-clamp-1">{feat.desc}</div>
                         </Link>
                       ))}
                     </div>
