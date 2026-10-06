@@ -4,10 +4,11 @@ import React from 'react';
 import Link from 'next/link';
 import {
   Bell,
-  MagnifyingGlass,
-  Sparkle,
+  WifiHigh,
+  SignOut,
   List,
-  CaretDown
+  CaretRight,
+  Sparkle
 } from '@phosphor-icons/react';
 
 interface TopBarProps {
@@ -18,16 +19,13 @@ interface TopBarProps {
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
-  currentFeatureTitle = 'CRM',
+  currentFeatureTitle = 'Dashboard',
   onToggleSidebar,
-  onToggleFeatureNavMobile,
   onOpenMetis
 }) => {
   return (
-    <header className="h-14 bg-white border-b border-slate-200 px-4 flex items-center justify-between z-10 sticky top-0">
-      {/* Left side: Logo & Title / Mobile Toggles */}
+    <header className="h-14 bg-white border-b border-slate-200 px-6 flex items-center justify-between z-10 sticky top-0">
       <div className="flex items-center gap-3">
-        {/* Mobile Hamburger */}
         <button
           onClick={onToggleSidebar}
           className="md:hidden p-1.5 text-slate-600 hover:bg-slate-100 rounded-md"
@@ -35,46 +33,40 @@ export const TopBar: React.FC<TopBarProps> = ({
           <List size={20} />
         </button>
 
-        <Link href="/base/" className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-brand-deep rounded-md flex items-center justify-center font-black text-white text-xs tracking-wider">
-            D7
-          </div>
-          <span className="font-bold text-slate-900 tracking-tight text-base hidden sm:inline">
+        <div className="flex items-center gap-2 text-sm">
+          <Link href="/base/" className="font-bold text-blue-600 hover:underline">
             Dynamics 7
-          </span>
-        </Link>
-
-        {/* Mobile Chevron for Feature Nav dropdown */}
-        <button
-          onClick={onToggleFeatureNavMobile}
-          className="md:hidden flex items-center gap-1 text-slate-700 bg-slate-100 px-2 py-1 rounded text-xs font-semibold"
-        >
-          <span>{currentFeatureTitle}</span>
-          <CaretDown size={12} />
-        </button>
+          </Link>
+          <CaretRight size={14} className="text-slate-400" />
+          <span className="font-semibold text-slate-800">{currentFeatureTitle}</span>
+        </div>
       </div>
 
-      {/* Right side: Actions & Profile */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
+        <div className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/60">
+          <WifiHigh size={16} />
+          <span>Cloud Online</span>
+        </div>
+
         <button
           onClick={onOpenMetis}
-          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 text-brand-deep hover:bg-blue-100 text-xs font-semibold transition"
+          className="hidden sm:flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 rounded-full text-xs font-semibold transition"
         >
           <Sparkle size={14} className="text-amber-500" />
-          <span>Ask Metis</span>
+          <span>Metis AI</span>
         </button>
 
-        <button className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition">
-          <MagnifyingGlass size={18} />
-        </button>
+        <div className="flex items-center gap-1.5 text-xs font-semibold text-red-600 bg-red-50 px-2.5 py-1 rounded-full border border-red-200/60">
+          <Bell size={14} />
+          <span>2 Overdue</span>
+        </div>
 
-        <button className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition relative">
-          <Bell size={18} />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
-        </button>
-
-        <Link href="/profile/" className="w-8 h-8 rounded-full bg-brand-deep text-white flex items-center justify-center font-semibold text-xs border border-white shadow-sm">
-          K
+        <Link
+          href="/login/"
+          className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-sm transition"
+        >
+          <SignOut size={14} />
+          <span>Account</span>
         </Link>
       </div>
     </header>

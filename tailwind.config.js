@@ -10,19 +10,27 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          deep: '#1E3A8A',
-          dark: '#1E40AF',
-          light: '#3B82F6',
+          deep: '#2563EB',
+          dark: '#1D4ED8',
+          light: '#60A5FA',
           subtle: '#EFF6FF',
         },
-        glass: {
-          bg: 'rgba(255, 255, 255, 0.85)',
-          border: 'rgba(226, 232, 240, 0.8)',
-          darkBg: 'rgba(15, 23, 42, 0.9)',
+        slate: {
+          50: '#F8FAFC',
+          100: '#F1F5F9',
+          200: '#E2E8F0',
+          300: '#CBD5E1',
+          400: '#94A3B8',
+          500: '#64748B',
+          600: '#475569',
+          700: '#334155',
+          800: '#1E293B',
+          900: '#0F172A',
+          950: '#020617',
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
       }
     },
   },
